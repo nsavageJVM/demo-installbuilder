@@ -1,0 +1,95 @@
+<project>
+
+    <shortName>DemoInstall</shortName>
+    <fullName>DemoInstall</fullName>
+    <version>1.0</version>
+
+    <leftImage>./images/Left.png</leftImage>
+    <logoImage>./images/Logo.png</logoImage>
+    <splashImage>./images/Splash.png</splashImage>
+    <requireInstallationByRootUser>0</requireInstallationByRootUser>
+
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <desktopShortcutList>
+                <shortcut>
+                    <comment>Demo Install</comment>
+                    <exec>${installdir}/demo-run</exec>
+                    <icon>${installdir}/images/Splash.png</icon>
+                    <name>Demo Install</name>
+                    <noPinToStart>0</noPinToStart>
+                    <path>${installdir}</path>
+                    <platforms>linux-x64</platforms>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>1</runInTerminal>
+                </shortcut>
+            </desktopShortcutList>
+            <folderList>
+                <folder>
+                    <description>LinuxFiles</description>
+                    <destination>${installdir}</destination>
+                    <name>LinuxFiles</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>demo.jar</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>images</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+
+        </component>
+        <include>
+            <file>java.xml</file>
+        </include>
+    </componentList>
+
+
+    <postInstallationActionList>
+    <createJavaLaunchers>
+        <destination>${installdir}</destination>
+        <javaLauncherList>
+            <javaLauncher>
+                <allowCommandLineArguments>1</allowCommandLineArguments>
+                <arguments></arguments>
+                <binaryName>demo-run</binaryName>
+                <jarFile>demo.jar</jarFile>
+                <preferredJavaBinary>${installdir}/java/bin/java</preferredJavaBinary>
+                <runInBackground>0</runInBackground>
+                <runInConsole>1</runInConsole>
+                <usePropertiesFile>0</usePropertiesFile>
+                <workingDirectory>${installdir}</workingDirectory>
+            </javaLauncher>
+        </javaLauncherList>
+    </createJavaLaunchers>
+
+    </postInstallationActionList>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <vendor>Software Engineering</vendor>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>yes</ask>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>yes</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>40</width>
+        </directoryParameter>
+    </parameterList>
+
+
+</project>

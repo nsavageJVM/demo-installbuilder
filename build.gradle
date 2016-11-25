@@ -1,0 +1,92 @@
+group 'installer-demo'
+version '0.0.1'
+
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+
+buildscript {
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.8'
+}
+
+
+
+
+dependencies {
+
+    compile('org.springframework.boot:spring-boot-starter')
+
+
+}
+
+File stagingFolder = new File(project.projectDir, "staging")
+File imagesFolder = new File(project.projectDir, "images")
+
+task deployArtifact(type: Copy, dependsOn: 'bootRepackage') {
+    // clean older build artifacts
+    if (stagingFolder.exists()) stagingFolder.delete()
+
+    File targetFolder = new File(project.projectDir, "build/libs/installer-demo-0.0.1.jar")
+
+    from targetFolder
+    into stagingFolder
+    rename { filename ->
+        filename.replace 'installer-demo-0.0.1', 'demo'
+    }
+}
+
+task deployXMLStaging(type: Copy , dependsOn: 'deployArtifact') {
+
+    File bitRockXML = new File(project.projectDir, "demo_linux_install.xml")
+
+    from bitRockXML
+    into stagingFolder
+
+    File javaXML = new File(project.projectDir, "java.xml")
+
+    from javaXML
+    into stagingFolder
+
+}
+
+
+task deployJREStaging(type: Copy, dependsOn: 'deployXMLStaging') {
+
+    def zipFile = file('jre1.8.0_111-linux-x64.zip')
+
+    from zipTree(zipFile)
+    into stagingFolder
+
+}
+
+
+task deployStaging(type: Copy, dependsOn: 'deployJREStaging') {
+
+    File stagingFolderImages = new File(project.projectDir, "staging/images")
+
+    from imagesFolder
+    into stagingFolderImages
+
+}
+
+
+task "create-dirs" << {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
